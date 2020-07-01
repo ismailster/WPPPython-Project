@@ -1,24 +1,26 @@
 from flask import Flask, jsonify, request, Response, render_template
 import yfinance as yt
 import pandas as pd
+import requests as rq
 
-def get_stock_data(company, period="2d"):
-	company = yt.Ticker(company)
-	ans = pd.DataFrame()
-	ans = company.history(period=period)
-	return ans.to_html()
+API_URL = "https://api.covid19api.com/"
+
+def Covid_API(state, date="2"):
+	output = rq.get(API_URL)
+	return output.text
 
 app = Flask(__name__)
 
 @app.route("/")
 def home():
-	return "hello HELLO!"
+	back = rq.get(API_URL)
+	return back.text
 
-@app.route("/<name_company>")
-def lookup_company(name_company):
-	giveback = get_stock_data(name_company)
-	return giveback
 
+@app.route("/summary/")
+def summary():
+	back = rq.get(f"{API_URL}/summary")
+	return back.text
 
 
 
