@@ -8,6 +8,12 @@ from datetime import datetime, timedelta
 from json2html import *
 
 # "https://api.covid19api.com/country/south-africa/status/confirmed?from=2020-03-01T00:00:00Z&to=2020-04-01T00:00:00Z"
+main_title = "Python Final Project Submission"
+base_pg_title01 = "Welcome to the final project submission page for the WPP Python Course"
+base_pg_title02 = "Brought to you by Imran Ismail"
+intro_one = "This server uses a publiclly available Covid-19 API at https://api.covid19api.com"
+
+
 
 API_URL = "https://api.covid19api.com"
 # Today_date = strftime("%Y%m%dT00:00:00Z", gmtime())
@@ -26,8 +32,10 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-	back = rq.get(API_URL)
-	return back.text
+	# back = rq.get(API_URL)
+	# new_input = back.text
+	# new_input = json2html.convert(json = input)
+	return render_template("base.html", main_title=main_title, title1=base_pg_title01, title2=base_pg_title02, intro_one=intro_one)
 
 
 @app.route("/summary/")
@@ -43,9 +51,15 @@ def countries():
 @app.route("/country/<country_name>")
 def one_country(country_name):
 	country_list_back = rq.get(f"{API_URL}/country/{country_name}/status/confirmed?from=2020-06-30T00:00:00Z&to=2020-07-01T00:00:00Z")
+	# user = request.args.get('user')
+	# state = request.args.get('state')
+	country_name =  country_name.replace("-", " ")
+	country_name = country_name.title()
+	state = "Yo yo"
 	input = country_list_back.text
 	new_input = json2html.convert(json = input)
-	return new_input
+	return render_template("home.html", name=country_name, feeling=state)
+	# return new_input
 
 
 
